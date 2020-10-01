@@ -55,8 +55,8 @@ def findlib(name):
 
 class LibGameStream:
     def __init__(self, libpath = ""):
-        self.commonlib = ctypes.cdll.LoadLibrary(findlib("libmoonlight-common.so"))
-        self.gslib = ctypes.cdll.LoadLibrary(findlib("libgamestream.so"))
+        self.commonlib = ctypes.cdll.LoadLibrary("/usr/lib64/libmoonlight-common.so")
+        self.gslib = ctypes.cdll.LoadLibrary("/usr/lib64/libgamestream.so")
         self.connected = False
         self.address = ""
         self.key_dir = ""
