@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addon id="script.moonlight"
+       name="Moonlight"
+       version="1.1.0"
+       provider-name="N/A">
+  <requires>
+    <import addon="xbmc.python" version="2.25.0"/>
+  </requires>
+  <extension point="xbmc.python.pluginsource" library="addon.py">
+    <provides>executable</provides>
+  </extension>
+  <extension point="xbmc.service">
+  </extension>
+  <extension point="xbmc.addon.metadata">
+    <summary>Moonlight: implementation of NVIDIA's GameStream protocol</summary>
+    <description>
+Moonlight: allows you to stream your collection of games from your PC (with NVIDIA Gamestream) to your device and play them remotely
+    </description>
+    <platform>all</platform>
+  </extension>
+</addon>
