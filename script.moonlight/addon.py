@@ -70,11 +70,15 @@ def index():
     xbmcplugin.endOfDirectory(addon_handle)
 
 def stream(app = None):
-    with open(addon.getAddonInfo("path") + "/start_moonlight.tmp", "w") as f:
+    with open("/tmp/moonlight.start", "w") as f:
         if app is None:
             f.write("")
         else:
-            f.write(app[0])
+            f.write("KODI_HEIGHT=\"" + str(xbmcgui.getScreenHeight()) + "\"\n")
+            f.write("KODI_WIDTH=\"" + str(xbmcgui.getScreenWidth()) + "\"\n")
+            f.write("MOON_APP=\"" + app[0] + "\"\n")
+            for var in ["MOON_SERVER_ADDR", "MOON_RESOLUTION", "MOON_WIDTH_RESOLUTION", "MOON_HEIGHT_RESOLUTION", "MOON_FRAMERATE", "MOON_BITRATE", "MOON_VSYNC", "MOON_FRAM_PACING", "MOON_AUDIO", "MOON_MULTI_CONTROLLER", "MOON_GAME_MODE", "MOON_HOST_AUDIO", "MOON_CODEC"]:
+                f.write(var + "=\"" + addon.getSetting(var) + "\"\n")
 
 mode = args.get("mode", None)
 if mode is None:

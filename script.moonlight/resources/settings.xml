@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <settings>
-	<setting id="MOON_SERVER_IP" type="ipaddress" label="Server IP" default="0.0.0.0"/>
-	<setting id="MOON_RESOLUTION" type="labelenum" label="Resolution" values="Custom|720p|1080p|4k" default="720p" />
+	<setting id="MOON_SERVER_ADDR" type="text" label="Server Host" default="0.0.0.0"/>
+	<setting label="Basic Settings" type="lsep"/>
+	<setting id="MOON_RESOLUTION" type="select" label="Resolution" values="Custom|720p|1080p|1440p|4k" default="720p" />
 	<setting id="MOON_WIDTH_RESOLUTION" type="text" label="Width" visible="eq(-1,0)" default="1366" />
 	<setting id="MOON_HEIGHT_RESOLUTION" type="text" label="Height" visible="eq(-2,0)" default="768" />
-	<setting id="MOON_FRAMERATE" type="select" values="30|60" label="FPS" default="30" />
-	<setting id="MOON_BITRATE" type="text" label="Bitrate" default="10000" />
-	<setting id="MOON_PACKETSIZE" type="text" label="Packet Size" default="1024" />
-	<setting type="sep" />
-	<setting id="MOON_REMOTE" type="bool" label="Remote Optimizations" default="false"/>
-	<setting id="MOON_NOSOPS" type="bool" label="Don't allow GFE to modify game settings" default="false"/>
-	<setting id="MOON_LOCALAUDIO" type="bool" label="Play audio locally" default="false"/>
-	<setting id="MOON_SURROUND" type="bool" label="Stream 5.1 surround sound (requires GFE 2.7)" default="false"/>
-	<setting id="MOON_AUDIO" type="text" label="Audio Device" default="sysdefault" />
+	<setting id="MOON_FRAMERATE" type="select" values="30|60|90|120" label="FPS" default="30" />
+	<setting id="MOON_BITRATE" type="number" label="Bitrate in Kbps" default="10000" />
+	<setting id="MOON_VSYNC" type="bool" label="V-Sync" default="false" />
+	<setting id="MOON_FRAM_PACING" type="bool" label="Frame Pacing" default="false"/>
+	<setting label="Audio Settings" type="lsep"/>
+	<setting id="MOON_AUDIO" type="select" values="stereo|5.1 Surround|7.1 Surround" label="Audio Config" default="stereo"/>
+	<setting label="Input Settings" type="lsep"/>
+	<setting id="MOON_MULTI_CONTROLLER" type="bool" label="Multiple Controller Support" default="false"/>
+	<setting label="Host Settings" type="lsep"/>
+	<setting id="MOON_GAME_MODE" type="bool" label="Optimize Game Settings for Streaming" default="true"/>
+	<setting id="MOON_HOST_AUDIO" type="bool" label="Play Audio on Host PC" default="false"/>
+	<setting label="Advanced Settings" type="lsep"/>
+	<setting id="MOON_CODEC" type="select" values="auto|H.264|HEVC" label="Video Codec" default="auto"/>
+	<setting id="MOON_DECODER" type="select" values="auto|software|hardware" label="Video Decoder" default="auto"/>
 </settings>
