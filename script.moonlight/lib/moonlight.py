@@ -13,15 +13,15 @@ GS_NOT_SUPPORTED_4K = -6
 class DISPLAY_MODE(ctypes.Structure):
     pass
 
-DISPLAY_MODE._fields_ = [("height", ctypes.c_int),
-                         ("width", ctypes.c_int),
-                         ("refresh", ctypes.c_int),
-                         ("next", ctypes.POINTER(DISPLAY_MODE))]
+DISPLAY_MODE._fields_ = [("height", ctypes.c_uint),
+                         ("width", ctypes.c_uint),
+                         ("refresh", ctypes.c_uint),
+                         ("__next__", ctypes.POINTER(DISPLAY_MODE))]
 
 class SERVER_INFORMATION(ctypes.Structure):
     _fields_ = [("address", ctypes.c_char_p),
                 ("serverInfoAppVersion", ctypes.c_char_p),
-                ("serverInfoGfeVersion", ctypes.c_bool)]
+                ("serverInfoGfeVersion", ctypes.c_char_p)]
 
 class SERVER_DATA(ctypes.Structure):
     _fields_ = [("address", ctypes.c_char_p),
@@ -32,7 +32,7 @@ class SERVER_DATA(ctypes.Structure):
                 ("currentGame", ctypes.c_int),
                 ("serverMajorVersion", ctypes.c_int),
                 ("gsVersion", ctypes.c_char_p),
-                ("modes", DISPLAY_MODE),
+                ("modes", ctypes.POINTER(DISPLAY_MODE)),
                 ("serverInfo", SERVER_INFORMATION)]
 
 class APP_LIST(ctypes.Structure):
@@ -40,7 +40,7 @@ class APP_LIST(ctypes.Structure):
 
 APP_LIST._fields_ = [("name", ctypes.c_char_p),
                      ("id", ctypes.c_int),
-                     ("next", ctypes.POINTER(APP_LIST))]
+                     ("__next__", ctypes.POINTER(APP_LIST))]
 
 class _HTTP_DATA(ctypes.Structure):
     _fields_ = [("memory", ctypes.POINTER(ctypes.c_ubyte)),
@@ -67,8 +67,10 @@ class LibGameStream:
         return addr.value
 
     def connect_server(self, address, key_dir = ""):
-        self.server = ctypes.pointer(SERVER_DATA(address, False, False, 0, 0))
+        self.server = ctypes.pointer(SERVER_DATA(address.encode('ascii'), False, False, 0, 0))
         self.address = address
+        # The value will be put in the serverInfo data structure, so we have to make sure it doesn't get freed
+        self.address_pt = ctypes.c_char_p(address.encode('ascii'))
 
         if key_dir == "":
             if "XDG_CONFIG_DIR" in os.environ:
@@ -77,7 +79,9 @@ class LibGameStream:
                 key_dir = os.path.join(os.environ["HOME"], ".cache", "moonlight")
 
         self.key_dir = key_dir
-        ret = self.gslib.gs_init(self.server, ctypes.c_char_p(address), ctypes.c_char_p(key_dir))
+
+        ret = self.gslib.gs_init(self.server, self.address_pt, ctypes.c_char_p(key_dir.encode('ascii')), 0, 0)
+
         if ret == GS_OK:
             self.connected = True
             return True
@@ -103,7 +107,7 @@ class LibGameStream:
 
         while applst:
             lst.append((applst[0].id, applst[0].name))
-            applst = applst[0].next
+            applst = applst[0].__next__
 
         return lst
 

@@ -4,8 +4,8 @@ import xbmcgui
 import xbmc
 
 import random
-import urllib
-import urlparse
+import urllib.request, urllib.parse, urllib.error
+import urllib.parse
 import sys
 import os
 
@@ -13,13 +13,13 @@ from lib.moonlight import LibGameStream
 
 base_url = sys.argv[0]
 addon_handle = int(sys.argv[1])
-args = urlparse.parse_qs(sys.argv[2][1:])
+args = urllib.parse.parse_qs(sys.argv[2][1:])
 addon = xbmcaddon.Addon()
-addon_base_path = xbmc.translatePath(addon.getAddonInfo('profile')).decode('utf-8')
+addon_base_path = xbmc.translatePath(addon.getAddonInfo('profile'))
 xbmcplugin.setContent(addon_handle, "files")
 
 def build_url(query):
-    return base_url + "?" + urllib.urlencode(query)
+    return base_url + "?" + urllib.parse.urlencode(query)
 
 def index():
     gs = LibGameStream(addon.getAddonInfo("path") + "/lib")
@@ -59,9 +59,12 @@ def index():
             gs.poster(appId, base_path)
             xbmc.sleep(100)
 
+        listitem = xbmcgui.ListItem(label=name)
+        listitem.setArt({"thumb": poster_path})
+
         xbmcplugin.addDirectoryItem(handle=addon_handle,
                                     url=build_url({"mode": "stream", "app": name}),
-                                    listitem=xbmcgui.ListItem(label=name, thumbnailImage=poster_path),
+                                    listitem=listitem,
                                     isFolder=False)
 
     xbmcplugin.endOfDirectory(addon_handle)
